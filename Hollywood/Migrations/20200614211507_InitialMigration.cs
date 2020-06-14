@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Hollywood.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Actor",
+                name: "Actors",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -19,11 +19,11 @@ namespace Hollywood.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Actor", x => x.Id);
+                    table.PrimaryKey("PK_Actors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Director",
+                name: "Directors",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -32,11 +32,11 @@ namespace Hollywood.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Director", x => x.Id);
+                    table.PrimaryKey("PK_Directors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Award",
+                name: "Awards",
                 columns: table => new
                 {
                     Title = table.Column<string>(type: "nvarchar(15)", nullable: false),
@@ -45,17 +45,17 @@ namespace Hollywood.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Award", x => new { x.Title, x.Year });
+                    table.PrimaryKey("PK_Awards", x => new { x.Title, x.Year });
                     table.ForeignKey(
-                        name: "FK_Award_Actor_ActorId",
+                        name: "FK_Awards_Actors_ActorId",
                         column: x => x.ActorId,
-                        principalTable: "Actor",
+                        principalTable: "Actors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Movie",
+                name: "Movies",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -66,11 +66,11 @@ namespace Hollywood.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Movie", x => x.Id);
+                    table.PrimaryKey("PK_Movies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Movie_Director_DirectorId",
+                        name: "FK_Movies_Directors_DirectorId",
                         column: x => x.DirectorId,
-                        principalTable: "Director",
+                        principalTable: "Directors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -88,19 +88,19 @@ namespace Hollywood.Migrations
                     table.ForeignKey(
                         name: "Awarded",
                         column: x => x.ActorId,
-                        principalTable: "Actor",
+                        principalTable: "Actors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ActorMovie_Movie_MovieId",
+                        name: "FK_ActorMovie_Movies_MovieId",
                         column: x => x.MovieId,
-                        principalTable: "Movie",
+                        principalTable: "Movies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
-                table: "Actor",
+                table: "Actors",
                 columns: new[] { "Id", "Age", "FullName" },
                 values: new object[,]
                 {
@@ -117,7 +117,7 @@ namespace Hollywood.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Director",
+                table: "Directors",
                 columns: new[] { "Id", "FullName" },
                 values: new object[,]
                 {
@@ -128,7 +128,7 @@ namespace Hollywood.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Award",
+                table: "Awards",
                 columns: new[] { "Title", "Year", "ActorId" },
                 values: new object[,]
                 {
@@ -141,7 +141,7 @@ namespace Hollywood.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Movie",
+                table: "Movies",
                 columns: new[] { "Id", "DirectorId", "Title" },
                 values: new object[,]
                 {
@@ -182,13 +182,13 @@ namespace Hollywood.Migrations
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Award_ActorId",
-                table: "Award",
+                name: "IX_Awards_ActorId",
+                table: "Awards",
                 column: "ActorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Movie_DirectorId",
-                table: "Movie",
+                name: "IX_Movies_DirectorId",
+                table: "Movies",
                 column: "DirectorId",
                 unique: true);
         }
@@ -199,16 +199,16 @@ namespace Hollywood.Migrations
                 name: "ActorMovie");
 
             migrationBuilder.DropTable(
-                name: "Award");
+                name: "Awards");
 
             migrationBuilder.DropTable(
-                name: "Movie");
+                name: "Movies");
 
             migrationBuilder.DropTable(
-                name: "Actor");
+                name: "Actors");
 
             migrationBuilder.DropTable(
-                name: "Director");
+                name: "Directors");
         }
     }
 }

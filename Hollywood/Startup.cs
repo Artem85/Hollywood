@@ -28,7 +28,7 @@ namespace Hollywood
         {
             services.AddDbContext<ActorDbContext>(options =>
                        options.UseSqlServer(Configuration.GetConnectionString("HollywoodDb")));
-            services.AddControllers();
+            services.AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

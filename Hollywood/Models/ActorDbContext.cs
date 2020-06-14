@@ -13,7 +13,8 @@ namespace Hollywood.Models
 
         public ActorDbContext(DbContextOptions<ActorDbContext> options) :base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureDeleted();
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

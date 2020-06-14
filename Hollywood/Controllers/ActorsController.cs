@@ -11,7 +11,7 @@ namespace Hollywood.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ActorsController : ControllerBase
+    public class ActorsController : Controller
     {
         private readonly ActorDbContext _context;
 
@@ -22,14 +22,14 @@ namespace Hollywood.Controllers
 
         // GET: api/Actors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Actor>>> GetSet()
+        public async Task<IActionResult> Actors()
         {
-            return await _context.Set<Actor>().ToListAsync();
+            return View(await _context.Actors.Include(a => a.ActorMovies).Include(a => a.Awards).ToListAsync());
         }
 
         // GET: api/Actors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Actor>> GetActor(int id)
+        public async Task<ActionResult<Actor>> Details(int id)
         {
             var actor = await _context.Set<Actor>().FindAsync(id);
 
@@ -38,7 +38,7 @@ namespace Hollywood.Controllers
                 return NotFound();
             }
 
-            return actor;
+            return View(actor);
         }
 
         [HttpPut("{id}")]

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hollywood.Migrations
 {
     [DbContext(typeof(ActorDbContext))]
-    [Migration("20200603231140_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20200614211507_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,7 +43,7 @@ namespace Hollywood.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Actor");
+                    b.ToTable("Actors");
 
                     b.HasData(
                         new
@@ -231,7 +231,7 @@ namespace Hollywood.Migrations
 
                     b.HasIndex("ActorId");
 
-                    b.ToTable("Award");
+                    b.ToTable("Awards");
 
                     b.HasData(
                         new
@@ -286,7 +286,7 @@ namespace Hollywood.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Director");
+                    b.ToTable("Directors");
 
                     b.HasData(
                         new
@@ -336,7 +336,7 @@ namespace Hollywood.Migrations
                     b.HasIndex("DirectorId")
                         .IsUnique();
 
-                    b.ToTable("Movie");
+                    b.ToTable("Movies");
 
                     b.HasData(
                         new

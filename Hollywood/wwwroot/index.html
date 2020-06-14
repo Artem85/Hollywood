@@ -2,9 +2,180 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <meta name="viewport" content="width=device-width" />
+    <title>Hollywood</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
+    <h2>Actors</h2>
+    <form name="actorForm">
+        <input type="hidden" name="id" value="0" />
+        <div class="form-group col-md-5">
+            <label for="name">Name:</label>
+            <input class="form-control" name="name" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="age">Age:</label>
+            <input class="form-control" name="age" type="number" />
+        </div>
+        <div class="panel-body">
+            <button type="submit" id="submit" class="btn btn-primary">Save</button>
+            <a id="reset" class="btn btn-primary">Clear</a>
+        </div>
+    </form>
+    <table class="table table-condensed table-striped  col-md-6">
+        <thead><tr><th>Id</th><th>Name</th><th>Age</th><th></th></tr></thead>
+        <tbody>
+        </tbody>
+    </table>
+    <script>
 
+        async function GetActors() {
+            const response = await fetch("/api/Actors", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+
+            if (response.ok === true) {
+                const actors = await response.json();
+                let rows = document.querySelector("tbody");
+                actors.forEach(actor => {
+                    rows.append(row(actor));
+                });
+            }
+        }
+
+        async function GetActor(id) {
+            const response = await fetch("/api/Actors/" + id, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const actor = await response.json();
+                const form = document.forms["actorForm"];
+                form.elements["id"].value = actor.id;
+                form.elements["name"].value = actor.name;
+                form.elements["age"].value = actor.age;
+            }
+        }
+
+        async function CreateActor(actorName, actorAge) {
+
+            const response = await fetch("api/Actors", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: actorName,
+                    age: parseInt(actorAge, 10)
+                })
+            });
+            if (response.ok === true) {
+                const actor = await response.json();
+                reset();
+                document.querySelector("tbody").append(row(actor));
+            }
+        }
+
+        async function EditActor(actorId, actorName, actorAge) {
+            const response = await fetch("api/Actors", {
+                method: "PUT",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: parseInt(actorId, 10),
+                    name: actorName,
+                    age: parseInt(actorAge, 10)
+                })
+            });
+            if (response.ok === true) {
+                const actor = await response.json();
+                reset();
+                document.querySelector("tr[data-rowid='" + actor.id + "']").replaceWith(row(actor));
+            }
+        }
+
+        async function DeleteActor(id) {
+            const response = await fetch("/api/Actors/" + id, {
+                method: "DELETE",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const actor = await response.json();
+                document.querySelector("tr[data-rowid='" + actor.id + "']").remove();
+            }
+        }
+
+        function reset() {
+            const form = document.forms["actorForm"];
+            form.reset();
+            form.elements["id"].value = 0;
+        }
+
+        function row(actor) {
+
+            const tr = document.createElement("tr");
+            tr.setAttribute("data-rowid", actor.id);
+
+            const idTd = document.createElement("td");
+            idTd.append(actor.id);
+            tr.append(idTd);
+
+            const nameTd = document.createElement("td");
+            nameTd.append(actor.name);
+            tr.append(nameTd);
+
+            const ageTd = document.createElement("td");
+            ageTd.append(actor.age);
+            tr.append(ageTd);
+
+            const linksTd = document.createElement("td");
+
+            const editLink = document.createElement("a");
+            editLink.setAttribute("data-id", actor.id);
+            editLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            editLink.append("Edit");
+            editLink.addEventListener("click", e => {
+
+                e.preventDefault();
+                GetActor(actor.id);
+            });
+            linksTd.append(editLink);
+
+            const removeLink = document.createElement("a");
+            removeLink.setAttribute("data-id", actor.id);
+            removeLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            removeLink.append("Delete");
+            removeLink.addEventListener("click", e => {
+
+                e.preventDefault();
+                DeleteActor(actor.id);
+            });
+
+            linksTd.append(removeLink);
+            tr.appendChild(linksTd);
+
+            return tr;
+        }
+
+        document.getElementById("reset").click(function (e) {
+
+            e.preventDefault();
+            reset();
+        })
+
+        document.forms["actorForm"].addEventListener("submit", e => {
+            e.preventDefault();
+            const form = document.forms["actorForm"];
+            const id = form.elements["id"].value;
+            const name = form.elements["name"].value;
+            const age = form.elements["age"].value;
+            if (id == 0)
+                CreateActor(name, age);
+            else
+                EditActor(id, name, age);
+        });
+
+        GetActors();
+
+    </script>
 </body>
 </html>
