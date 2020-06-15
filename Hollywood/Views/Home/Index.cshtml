@@ -1,0 +1,26 @@
+﻿@using Hollywood.ViewModels
+@using Hollywood.Models
+
+@model IndexViewModel
+@{
+    ViewData["Title"] = "Movies";
+}
+
+<form class="form-inline">
+    <label>Choose the movie:</label>
+    <select name="movieId" class="form-control">
+        @foreach (MovieModel movie in Model.Movies)
+        {
+            <option value="@movie.Id">@movie.Name</option>
+        }
+    </select>
+    <input type="submit" />
+</form>
+<br />
+<table class="table">
+    @foreach (Actor actor in Model.Actors)
+    {
+        <tr><td>@actor.Name</td><td>@actor.Age</td><td>@actor.AcademyWinner</td></tr>
+    }
+</table>
+
