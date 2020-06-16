@@ -79,16 +79,17 @@ namespace Hollywood.Controllers
             return CreatedAtAction("GetActor", new { id = actor.Id }, actor);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Actor>> DeleteActor(int id)
+        [Route("api/delete")]
+        //[HttpDelete("{id}")]
+        public async Task<ActionResult<Actor>> Delete(int id)
         {
-            var actor = await _context.Set<Actor>().FindAsync(id);
+            var actor = await _context.Actors.FindAsync(id);
             if (actor == null)
             {
                 return NotFound();
             }
 
-            _context.Set<Actor>().Remove(actor);
+            _context.Actors.Remove(actor);
             await _context.SaveChangesAsync();
 
             return actor;
@@ -96,7 +97,7 @@ namespace Hollywood.Controllers
 
         private bool ActorExists(int id)
         {
-            return _context.Set<Actor>().Any(e => e.Id == id);
+            return _context.Actors.Any(e => e.Id == id);
         }
     }
 }
