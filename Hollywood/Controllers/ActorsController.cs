@@ -41,6 +41,22 @@ namespace Hollywood.Controllers
             return View(actor);
         }
 
+        [Route("delete")]
+        //[HttpDelete("{id}")]
+        public async Task<ActionResult<Actor>> Delete(int id)
+        {
+            var actor = await _context.Actors.FindAsync(id);
+            if (actor == null)
+            {
+                return NotFound();
+            }
+
+            _context.Actors.Remove(actor);
+            await _context.SaveChangesAsync();
+
+            return actor;
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutActor(int id, Actor actor)
         {
@@ -77,22 +93,6 @@ namespace Hollywood.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetActor", new { id = actor.Id }, actor);
-        }
-
-        [Route("api/delete")]
-        //[HttpDelete("{id}")]
-        public async Task<ActionResult<Actor>> Delete(int id)
-        {
-            var actor = await _context.Actors.FindAsync(id);
-            if (actor == null)
-            {
-                return NotFound();
-            }
-
-            _context.Actors.Remove(actor);
-            await _context.SaveChangesAsync();
-
-            return actor;
         }
 
         private bool ActorExists(int id)
